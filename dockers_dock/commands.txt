@@ -1,0 +1,9 @@
+docker build -t ubuntu_dev .
+docker run -it ubuntu_dev
+docker run -it ubuntu_dev --mount source=my-vol,target=/app 
+docker run -it ubuntu_dev --name devtest --mount type=bind,source="$(pwd)"/output,target=/app
+
+docker run -it ubuntu_dev --name devtest --mount type=bind,source="$(pwd)"/output,target=/app --privileged
+docker container ls
+docker volume ls
+docker cp stupefied_wing:/app/test.txt .
