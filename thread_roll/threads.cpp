@@ -1,5 +1,10 @@
 // Exercises from operating system in three easy step book. - http://pages.cs.wisc.edu/~remzi/OSTEP/
 #include <iostream>
+
+#if __linux__
+#include <cassert>
+#endif
+
 #include <pthread.h>
 
 static volatile int counter = 0;
