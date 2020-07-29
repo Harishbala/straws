@@ -1,3 +1,6 @@
 From ubuntu
 
-RUN apt-get update && apt-get install build-essential -y
+RUN apt-get update && apt-get install build-essential -y \
+    vim \
+    git
+
