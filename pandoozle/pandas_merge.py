@@ -25,3 +25,6 @@ a_df1 = pd.DataFrame([[1, 2], [3, 4]], columns=list('AB'))
 a_df2 = pd.DataFrame([[5, 6], [7, 8]], columns=list('BC'))
 result = a_df1.append(a_df2, ignore_index=True, sort=False)
 print(result)
+
+result.to_csv('output.csv', index=False)
+
