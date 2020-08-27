@@ -1,5 +1,7 @@
 #include <iostream>
 #include <memory>
+#include <vector>
+#include <map>
 
 using namespace std;
 
@@ -16,21 +18,29 @@ struct Node {
     s_ptr<Node> right;
 };
 
-class Tree
+struct Node_E {
+    Node_E(int val) : val(val)
+    {}
+    int val;
+    vector<s_ptr<Node_E> > children;
+    std::map<std::string, int> flags;
+};
+
+class BinaryTree
 {
     public:
-    Tree() : root(nullptr) {}
+    BinaryTree() : root(nullptr) {}
     void insert(int value);
     private:
     s_ptr<Node> root;
     void insert(int value, s_ptr<Node> current);
 };
 
-void Tree::insert(int value)
+void BinaryTree::insert(int value)
 {
     return insert(value, root);
 }
-void Tree::insert(int value, s_ptr<Node> current)
+void BinaryTree::insert(int value, s_ptr<Node> current)
 {
     if(current)
     {
@@ -56,9 +66,31 @@ void Tree::insert(int value, s_ptr<Node> current)
     }
 }
 
+class Tree
+{
+    s_ptr<Node_E> find_center_of_tree();
+private:
+    s_ptr<Node_E> find_center_of_tree_(const s_ptr<Node_E> current);
+    s_ptr<Node_E> root;
+};
+
+s_ptr<Node_E> Tree::find_center_of_tree()
+{
+    find_center_of_tree_(root);
+}
+s_ptr<Node_E> Tree::find_center_of_tree_(s_ptr<Node_E> current)
+{
+    if(current)
+    {
+        for(const auto item : current->children)
+        {
+            find_center_of_tree_(item);
+        }
+    }
+}
 int main()
 {
-   Tree t;
+   BinaryTree t;
    std::cout<<"Inserting elements\n";
    t.insert(1);
    t.insert(2);

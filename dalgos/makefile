@@ -9,3 +9,4 @@ tree: tree.o
 
 clean:
 	rm *.o
+	rm tree
