@@ -1,12 +1,18 @@
-CC=g++
-CFLAGS= --std=c++11
+CC=gcc
+CXX=g++
+CXXFLAGS=--std=c++11
 OPT_FLAG= -o
 
-all: tree
+all: tree linked_list
 
 tree: tree.o
-	$(CC) $< $(CFLAGS) $(OPT_FLAG) $@
+	$(CXX) $< $(OPT_FLAG) $@
+
+linked_list: linked_list.o
+	$(CC) $< $(OPT_FLAG) $@
 
 clean:
 	rm *.o
 	rm tree
+	rm linked_list
+

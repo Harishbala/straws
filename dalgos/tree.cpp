@@ -76,17 +76,19 @@ private:
 
 s_ptr<Node_E> Tree::find_center_of_tree()
 {
-    find_center_of_tree_(root);
+    return find_center_of_tree_(root);
 }
+
 s_ptr<Node_E> Tree::find_center_of_tree_(s_ptr<Node_E> current)
 {
     if(current)
     {
         for(const auto item : current->children)
         {
-            find_center_of_tree_(item);
+           return  find_center_of_tree_(item);
         }
     }
+    return nullptr;
 }
 int main()
 {
