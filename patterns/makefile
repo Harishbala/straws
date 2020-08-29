@@ -8,3 +8,7 @@ misc: misc.o
 
 misc.o: misc.cpp
 	$(CXX) $(CFLAGS) $(INC) $<
+
+clean:
+	rm *.o
+	rm misc
