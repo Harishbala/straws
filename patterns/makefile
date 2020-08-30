@@ -1,14 +1,14 @@
 CXX = g++
 CFLAGS = -c --std=c++17
 INC = -I/usr/local/Cellar/boost/1.73.0/include/
-all: misc
+all: adapter_pattern
 
-misc: misc.o
+adapter_pattern: adapter_pattern.o
 	$(CXX) $(INC) $< -o $@
 
-misc.o: misc.cpp
+adapter_pattern.o: adapter_pattern.cpp
 	$(CXX) $(CFLAGS) $(INC) $<
 
 clean:
 	rm *.o
-	rm misc
+	rm adapter_pattern
