@@ -3,3 +3,5 @@ cmake_minimum_required(VERSION 3.5)
 project(graph_lib LANGUAGES CXX)
 
 add_library(graph_lib SHARED graph.cpp)
+
+target_compile_features(graph_lib PUBLIC cxx_std_11)
