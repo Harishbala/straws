@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include "graph.h"
 
 int main()
@@ -7,6 +9,11 @@ int main()
     graph.insert_node(2, {3, 4, 1});
     graph.insert_node(3, {4, 3, 2});
     graph.insert_node(4, {1, 3, 2});
+
+    graph.print_nodes();
+    graph.delete_node(2);
+
+    std::cout << "After deleting nodes : \n";
 
     graph.print_nodes();
 }
