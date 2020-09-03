@@ -25,17 +25,19 @@ void Graph::print_nodes() const
 
 void Graph::delete_node(int node_id)
 {
-    for(auto& node : nodes) {
-        std::cout << " iterating through nodes\n";
+    for(auto it = begin(nodes); it != end(nodes);) {
+        auto& node = *it;
         if (node->label_ == node_id) {
-            std::cout << "Matched node id \n";
             for(const auto& node_index : node->neighbors_) {
-                std::cout << "matching node index\n";
                 auto& interested_neighbors = nodes[node_index-1]->neighbors_;
                 auto new_end = std::remove_if(begin(interested_neighbors), end(interested_neighbors),
                             [node_id] (int neighbor_node_id) { return neighbor_node_id == node_id; });
                 interested_neighbors.erase(new_end, end(interested_neighbors));
             }
+            nodes.erase(it);
+            return;
         }
+        else
+            ++it;
     }
 }
