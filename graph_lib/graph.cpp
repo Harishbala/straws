@@ -1,43 +1,90 @@
 #include <vector>
 #include <memory>
 #include <iostream>
+#include <queue>
 
 #include "graph.h"
 
-void Graph::insert_node(const int node_id, const std::vector<int>&& neighbors)
+template<typename T>
+void Graph<T>::insert_node(const T node_id, const std::vector<T>&& neighbors)
 {
-    auto node_ptr = std::make_unique<GraphNode>();
+    auto node_ptr = std::make_unique<GraphNode<T>>();
     node_ptr->label_ = node_id;
     node_ptr->neighbors_ =  std::move(neighbors);
-    nodes.push_back(std::move(node_ptr));
+    nodes.insert(make_pair(node_ptr->label_, std::move(node_ptr)));
 }
 
-void Graph::print_nodes() const
+template<typename T>
+void Graph<T>::print_nodes() const
 {
   for(const auto& node : nodes) {
-      std::cout << node->label_ << "---";
-      for(const auto& item : node->neighbors_) {
+      std::cout << node.second->label_ << "---";
+      for(const auto& item : node.second->neighbors_) {
           std::cout << item << ' ';
       }
       std::cout<<'\n';
   }
 }
 
-void Graph::delete_node(int node_id)
+template<typename T>
+void Graph<T>::delete_node(const T node_id)
 {
-    for(auto it = begin(nodes); it != end(nodes);) {
-        auto& node = *it;
-        if (node->label_ == node_id) {
-            for(const auto& node_index : node->neighbors_) {
-                auto& interested_neighbors = nodes[node_index-1]->neighbors_;
+    auto it = nodes.find(node_id);
+    if(it != nodes.end()) { 
+        auto& node = it->second;
+        for(const auto& node_index : node->neighbors_) {
+            auto node_it = nodes.find(node_index);
+            if(node_it != nodes.end()) {
+                auto& interested_neighbors = node_it->second->neighbors_;
                 auto new_end = std::remove_if(begin(interested_neighbors), end(interested_neighbors),
-                            [node_id] (int neighbor_node_id) { return neighbor_node_id == node_id; });
+                            [&node_id] (const auto& neighbor_node_id) { return neighbor_node_id == node_id; });
                 interested_neighbors.erase(new_end, end(interested_neighbors));
             }
-            nodes.erase(it);
-            return;
         }
-        else
-            ++it;
+        nodes.erase(it);
+        return;
     }
 }
+
+template<typename T>
+void Graph<T>::reset_visited_state() 
+{
+  for(const auto& node : nodes) {
+      node.second->visited = false;
+  }
+}
+
+template<typename T>
+void Graph<T>::bfs(T node_id, std::function<void()> action)
+{
+    reset_visited_state();
+
+    std::queue<T> bfs_q;    
+    bfs_q.push(node_id);
+    while(!bfs_q.empty()) {
+        auto id = bfs_q.front();
+        auto it = nodes.find(id);
+        
+        if (it != nodes.end() && !it->second->visited) {
+            std::cout << it->second->label_ << '\n';
+            it->second->visited = true;
+            for(const auto item : it->second->neighbors_) {
+                bfs_q.push(item);
+            }
+        }
+        bfs_q.pop();
+    }
+}
+
+int main1()
+{
+    Graph<int> graph;
+    Graph<std::string> string_graph;
+    string_graph.insert_node("Dummy", {});
+    string_graph.bfs("Dummy", [](){});
+    string_graph.print_nodes();
+    string_graph.delete_node("Dummy");
+    return 0;
+}
+
+
