@@ -27,6 +27,23 @@ void Graph<T>::print_nodes() const
 }
 
 template<typename T>
+void Graph<T>::print_nodes_as_dot() const
+{
+  std::cout << "graph great_graph {\n";
+  for(const auto& node : nodes) {
+      std::cout <<node.second->label_ <<" -- {";
+      int i = 0;
+      for(const auto& item : node.second->neighbors_) {
+          if(i++ != 0)
+              std::cout<<",";
+          std::cout <<item;
+      }
+      std::cout<<"}\n";
+  }
+  std::cout<<'}';
+}
+
+template<typename T>
 void Graph<T>::delete_node(const T node_id)
 {
     auto it = nodes.find(node_id);
@@ -83,6 +100,7 @@ int main1()
     string_graph.insert_node("Dummy", {});
     string_graph.bfs("Dummy", [](){});
     string_graph.print_nodes();
+    string_graph.print_nodes_as_dot();
     string_graph.delete_node("Dummy");
     return 0;
 }
