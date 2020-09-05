@@ -15,10 +15,10 @@ int main()
     input_file >> j;
 
     for(const auto& item : j) {
-        graph.insert_node(item["label"], item["neighbors"]);
+        graph.insert_node(item["label"], item["neighbors"], item["weights"]);
     }
 
-    graph.print_nodes_as_dot();
+    graph.print_nodes();
     std::cout << "Before delete ----\n";
     graph.delete_node("Descartes");
     std::cout << "After delete ----\n";
