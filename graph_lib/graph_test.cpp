@@ -11,8 +11,10 @@ int main()
     graph.insert_node("Kant", {"Hegel", "Descartes", "Schopenhauer"});
 
     graph.print_nodes_as_dot();
+    std::cout << "Before delete ----\n";
     graph.delete_node("Descartes");
-    //graph.dfs("Plato", [](){});
+    std::cout << "After delete ----\n";
+    graph.dfs("Plato", [](){});
     //graph.dfs();
     //graph.bfs("Plato", [](){});
 }

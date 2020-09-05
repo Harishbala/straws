@@ -36,16 +36,27 @@ private:
     void reset_visited_state();
     void dfs_(const std::unique_ptr<GraphNode<T2> >& node, std::function<void()> action);
 
+    
     std::map<T2, std::unique_ptr<GraphNode<T2> > > nodes;
 };
 
 template<typename T>
 void Graph<T>::insert_node(const T node_id, const std::vector<T>&& neighbors)
 {
-    auto node_ptr = std::make_unique<GraphNode<T>>();
-    node_ptr->label_ = node_id;
-    node_ptr->neighbors_ =  std::move(neighbors);
-    nodes.insert(make_pair(node_ptr->label_, std::move(node_ptr)));
+    auto it = nodes.find(node_id);
+    if(it ==  nodes.end()) {
+        auto node_ptr = std::make_unique<GraphNode<T>>();
+        node_ptr->label_ = node_id;
+        auto [new_it, result] = nodes.insert(make_pair(node_ptr->label_, std::move(node_ptr)));
+        it = new_it;
+    }
+    for (const auto& item : neighbors) {
+        auto d_it =  nodes.find(item);
+        if(d_it == nodes.end()) {
+            insert_node(item, {});
+        }
+        it->second->neighbors_.push_back(item);
+    }
 }
 
 template<typename T>
@@ -140,9 +151,15 @@ void Graph<T>::dfs(T node_id, std::function<void()> action)
 template<typename T>
 void Graph<T>::dfs_(const std::unique_ptr<GraphNode<T> >& node, std::function<void()> action)
 {
-    const auto current = node;
-    while(current && current->visited)
-    {
-        return;
+    const auto& current = node;
+    while(current && !current->visited) {
+        current->visited = true;
+        std::cout << current->get_label() << '\n';
+        for(const auto& item : current->neighbors_) {
+            auto n_it =  nodes.find(item);
+            if (n_it != nodes.end()) {
+                dfs_(n_it->second, action);
+            }
+        }
     }
 }
