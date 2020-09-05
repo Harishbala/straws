@@ -18,6 +18,7 @@ int main()
         graph.insert_node(item["label"], item["neighbors"], item["weights"]);
     }
 
+    graph.add_edge("Aristotle", "Kant", 25);
     graph.print_nodes_as_dot();
     graph.delete_node("Descartes");
     //graph.dfs("Plato", [](){});

@@ -41,6 +41,7 @@ public:
     void delete_node(T2 node_id);
     void bfs(T2 node_id, std::function<void()> action);
     void dfs(T2 node_id, std::function<void()> action);
+    void add_edge(const T2& source, const T2& dest, int weight = 0);
     void print_nodes_as_dot() const;
     
 private:
@@ -140,7 +141,10 @@ void Graph<T>::bfs(T node_id, std::function<void()> action)
     while(!bfs_q.empty()) {
         auto id = bfs_q.front();
         auto it = nodes.find(id);
-        
+       
+       if(it == nodes.end())
+          return;
+
         if (it != nodes.end() && !it->second->visited) {
             std::cout << it->second->label_ << '\n';
             it->second->visited = true;
@@ -177,3 +181,13 @@ void Graph<T>::dfs_(const std::unique_ptr<GraphNode<T> >& node, std::function<vo
         }
     }
 }
+
+template<typename T>
+void Graph<T>::add_edge(const T& source, const T& dest, int weight)
+{
+    auto it = nodes.find(source);
+    if(it != nodes.end()) {
+        it->second->neighbors_.push_back({dest, weight});
+    }
+}
+
