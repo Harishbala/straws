@@ -31,7 +31,7 @@ void Graph<T>::print_nodes_as_dot() const
 {
   std::cout << "graph great_graph {\n";
   for(const auto& node : nodes) {
-      std::cout <<node.second->label_ <<" -- {";
+      std::cout <<node.second->get_label()<<" -- {";
       int i = 0;
       for(const auto& item : node.second->neighbors_) {
           if(i++ != 0)
