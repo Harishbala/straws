@@ -1,0 +1,34 @@
+[
+    {
+        "label": "Plato",
+        "neighbors": [
+            "Socrates",
+            "Aristotle",
+            "Pythagoras"
+        ]
+    },
+    {
+        "label": "Aristotle",
+        "neighbors": [
+            "Parmenides",
+            "Plato",
+            "Archimedes"
+        ]
+    },
+    {
+        "label": "Descartes",
+        "neighbors": [
+            "Leibniz",
+            "Spinoza",
+            "Hume"
+        ]
+    },
+    {
+        "label": "Kant",
+        "neighbors": [
+            "Hegel",
+            "Descartes",
+            "Schopenhauer"
+        ]
+    }
+]
