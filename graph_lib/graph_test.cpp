@@ -1,6 +1,10 @@
 #include <iostream>
+#include <fstream>
+#include <nlohmann/json.hpp>
 
 #include "graph.hpp"
+
+using nlohmann::json;
 
 int main()
 {
@@ -9,6 +13,15 @@ int main()
     graph.insert_node("Aristotle", {"Parmenides", "Plato", "Archimedes"});
     graph.insert_node("Descartes", {"Leibniz", "Spinoza", "Hume"});
     graph.insert_node("Kant", {"Hegel", "Descartes", "Schopenhauer"});
+
+    json j;
+    std::ifstream input_file("graph.json");
+    input_file >> j;
+
+    auto list = j["dummy"];
+    for(const auto & item : list) {
+        std::cout << item <<'\n';
+    }
 
     graph.print_nodes_as_dot();
     std::cout << "Before delete ----\n";
