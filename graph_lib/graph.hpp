@@ -29,12 +29,14 @@ public:
     void print_nodes() const;
     void delete_node(T2 node_id);
     void bfs(T2 node_id, std::function<void()> action);
+    void dfs(T2 node_id, std::function<void()> action);
     void print_nodes_as_dot() const;
     
 private:
     void reset_visited_state();
+    void dfs_(const std::unique_ptr<GraphNode<T2> >& node, std::function<void()> action);
 
-    std::map<T2, std::unique_ptr<GraphNode<T2>> > nodes;
+    std::map<T2, std::unique_ptr<GraphNode<T2> > > nodes;
 };
 
 template<typename T>
@@ -125,3 +127,22 @@ void Graph<T>::bfs(T node_id, std::function<void()> action)
     }
 }
 
+template<typename T>
+void Graph<T>::dfs(T node_id, std::function<void()> action)
+{
+    reset_visited_state();
+
+    auto it = nodes.find(node_id);
+    if(it != nodes.end())
+        dfs_(it->second, action);
+}
+
+template<typename T>
+void Graph<T>::dfs_(const std::unique_ptr<GraphNode<T> >& node, std::function<void()> action)
+{
+    const auto current = node;
+    while(current && current->visited)
+    {
+        return;
+    }
+}

@@ -12,8 +12,7 @@ int main()
 
     graph.print_nodes_as_dot();
     graph.delete_node("Descartes");
-
-    //graph.bfs("Aristotle", [](){} );
-    //std::cout << "----\n";
+    //graph.dfs("Plato", [](){});
+    //graph.dfs();
     //graph.bfs("Plato", [](){});
 }
