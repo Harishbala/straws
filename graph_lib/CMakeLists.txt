@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.5)
 project(graph_lib LANGUAGES CXX)
 
 set(SRC graph_test.cpp)
-set(INC graph.h)
+set(INC graph.hpp)
 
 add_executable(graph_test ${SRC} ${INC})
 
