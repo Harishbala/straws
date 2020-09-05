@@ -18,9 +18,7 @@ int main()
         graph.insert_node(item["label"], item["neighbors"], item["weights"]);
     }
 
-    graph.print_nodes();
-    std::cout << "Before delete ----\n";
+    graph.print_nodes_as_dot();
     graph.delete_node("Descartes");
-    std::cout << "After delete ----\n";
-    graph.dfs("Plato", [](){});
+    //graph.dfs("Plato", [](){});
 }

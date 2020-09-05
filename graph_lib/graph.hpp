@@ -46,7 +46,6 @@ public:
 private:
     void reset_visited_state();
     void dfs_(const std::unique_ptr<GraphNode<T2> >& node, std::function<void()> action);
-
     
     std::map<T2, std::unique_ptr<GraphNode<T2> > > nodes;
 };
@@ -93,16 +92,12 @@ void Graph<T>::print_nodes() const
 template<typename T>
 void Graph<T>::print_nodes_as_dot() const
 {
-  std::cout << "graph great_graph {\n";
+  std::cout << "digraph great_graph {\n";
   for(const auto& node : nodes) {
-      std::cout <<node.second->get_label()<<" -- {";
       int i = 0;
       for(const auto& item : node.second->neighbors_) {
-          if(i++ != 0)
-              std::cout<<",";
-          std::cout <<item.label_;
+          std::cout <<node.second->get_label() << " -> " << item.label_<< "[label=" <<item.weight_ <<"]\n";
       }
-      std::cout<<"}\n";
   }
   std::cout<<'}';
 }
