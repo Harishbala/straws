@@ -8,6 +8,25 @@ struct GraphNode
     T label_;
     bool visited;
     std::vector<T> neighbors_;
+
+    //virtual ~GraphNode() {}
+    /*GraphNode(GraphNode&& other)
+    {
+        label_ = std::move(other.label_);
+        visited = std::move(other.visited_);
+        neighbors_ = std::move(other.neighbors_);
+    }
+
+    GraphNode& operator=(GraphNode&& other)
+    {
+       label_ = "test"; 
+    }
+    virtual T get_label()
+    {
+        std::cout << label_ << '\n';
+        return label_;
+    }
+    */
 };
 
 template<typename T2>
