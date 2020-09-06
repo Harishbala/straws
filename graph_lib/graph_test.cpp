@@ -31,5 +31,6 @@ int main()
             graph_dot.add_edge(et.parent_, et.current_, count++);
             });
     std::cout << graph_dot.str();
+    graph.dijikstra_shortest_paths("Plato");
     //bfs_graph.print_nodes_as_dot();
 }

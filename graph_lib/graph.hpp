@@ -7,6 +7,7 @@
 #include <memory>
 #include <iostream>
 #include <queue>
+#include <algorithm>
 
 template <class T>
 struct Edge
@@ -54,7 +55,8 @@ public:
     void dfs(T2 node_id, std::function<void(EdgeTraversal<T2>& )> action);
     void add_edge(const T2& source, const T2& dest, int weight = 0);
     void print_nodes_as_dot() const;
-    
+    void dijikstra_shortest_paths(T2 source);
+
 private:
     void reset_visited_state();
     void bfs_(T2& node_id, std::function<void(EdgeTraversal<T2>& )> action, EdgeTraversal<T2>& et);
@@ -218,6 +220,68 @@ void Graph<T>::add_edge(const T& source, const T& dest, int weight)
         it = nodes.find(source);
     }
     it->second->neighbors_.push_back({dest, weight});
+}
+
+template<typename T>
+void Graph<T>::dijikstra_shortest_paths(T source)
+{
+    //Create a distance hash_map, where you can store distance.
+    //Set the source dist to 0 and all others to infinite.
+    //Insert the source and it's distance to min heap which controlled by distance, need to add comp function.
+        //While the heap is not empty, iterate
+            //For each item in min heap, caluclate it's neighbors' distance by source distance + weight
+            //if the distance is new, i.e. if the old distance is infinite then just push into heap.
+            //update if new short distance found for vertex in min heap, probably need to find by key with a special compare function.
+            //reform heap
+    //return the final distance hash_map
+    auto it = nodes.find(source);
+    if(it == nodes.end()) return;
+
+    std::unordered_map <T, int> distance_map;
+    for(const auto& item : nodes) {
+        distance_map.insert(std::make_pair<T, int>(item.second->get_label(), INT_MAX));
+    }
+
+    auto& dist = distance_map[source];
+    dist = 0;
+
+    
+    typedef std::tuple<int, T> distance_values; 
+    std::vector<distance_values> min_heap;
+    min_heap.push_back({0, source});
+    auto heap_comp = [] (const distance_values& first, const distance_values& second) {
+            return (std::get<0>(first) < std::get<0>(second));
+            };
+    std::make_heap(begin(min_heap), end(min_heap), heap_comp);
+    while(!min_heap.empty()) {
+        std::pop_heap(begin(min_heap), end(min_heap));
+        auto [distance, node_id] = *(min_heap.end()-1);
+        min_heap.erase(min_heap.end() - 1);
+
+        auto current_it = nodes.find(node_id);
+
+        for(const auto& neighbor : current_it->second->neighbors_) {
+            //std::cout << neighbor.label_ <<' '<<std::endl;
+            auto new_dist = distance_map[current_it->first] + neighbor.weight_;
+            if(new_dist < distance_map[neighbor.label_]) {
+                auto item_in_heap = std::find_if(cbegin(min_heap), cend(min_heap), [&neighbor] (const distance_values& item) {
+                        return std::get<1>(item) == neighbor.label_;
+                        });
+                if(item_in_heap != min_heap.end()) {
+                    min_heap.erase(item_in_heap);
+                    std::make_heap(begin(min_heap), end(min_heap), heap_comp);
+                }
+
+                min_heap.push_back({new_dist, neighbor.label_});
+                std::push_heap(begin(min_heap), end(min_heap));
+                distance_map[neighbor.label_] = new_dist;
+            }
+        }
+    }
+
+    for(const auto& item : distance_map) {
+        std::cout << source << " -> " << item.first << " : " << item.second <<'\n';
+    }
 }
 #endif
 
