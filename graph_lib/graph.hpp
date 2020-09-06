@@ -51,14 +51,14 @@ public:
     void print_nodes() const;
     void delete_node(T2 node_id);
     void bfs(T2 node_id, std::function<void(EdgeTraversal<T2>& )> action);
-    void dfs(T2 node_id, std::function<void()> action);
+    void dfs(T2 node_id, std::function<void(EdgeTraversal<T2>& )> action);
     void add_edge(const T2& source, const T2& dest, int weight = 0);
     void print_nodes_as_dot() const;
     
 private:
     void reset_visited_state();
     void bfs_(T2& node_id, std::function<void(EdgeTraversal<T2>& )> action, EdgeTraversal<T2>& et);
-    void dfs_(const std::unique_ptr<GraphNode<T2> >& node, std::function<void()> action);
+    void dfs_(const std::unique_ptr<GraphNode<T2> >& node, std::function<void(EdgeTraversal<T2>& )> action);
     
     std::map<T2, std::unique_ptr<GraphNode<T2> > > nodes;
 };
@@ -180,7 +180,7 @@ void Graph<T>::bfs_(T& node_id, std::function<void(EdgeTraversal<T>& )> action, 
 }
 
 template<typename T>
-void Graph<T>::dfs(T node_id, std::function<void()> action)
+void Graph<T>::dfs(T node_id, std::function<void(EdgeTraversal<T>& )> action)
 {
     reset_visited_state();
 
@@ -190,15 +190,19 @@ void Graph<T>::dfs(T node_id, std::function<void()> action)
 }
 
 template<typename T>
-void Graph<T>::dfs_(const std::unique_ptr<GraphNode<T> >& node, std::function<void()> action)
+void Graph<T>::dfs_(const std::unique_ptr<GraphNode<T> >& node, std::function<void(EdgeTraversal<T>& )> action)
 {
     const auto& current = node;
     while(current && !current->visited) {
         current->visited = true;
-        std::cout << current->get_label() << '\n';
         for(const auto& item : current->neighbors_) {
             auto n_it =  nodes.find(item.label_);
             if (n_it != nodes.end()) {
+                EdgeTraversal<T> et;
+                et.parent_ = current->get_label();
+                et.current_ = item.label_;
+                et.weight = item.weight_;
+                action(et);
                 dfs_(n_it->second, action);
             }
         }
