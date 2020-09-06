@@ -1,3 +1,5 @@
+#ifndef GRAPH_HPP
+#define GRAPH_HPP
 #include <vector>
 #include <map>
 #include <memory>
@@ -32,6 +34,15 @@ struct GraphNode
     }
 };
 
+template <class T>
+struct EdgeTraversal
+{
+    T parent_;
+    bool has_parent = false;
+    T current_;
+    int weight;
+};
+
 template<typename T2>
 class Graph
 {
@@ -39,13 +50,14 @@ public:
     void insert_node(const T2 node_id, const std::vector<T2>&& neighbors, const std::vector<int> weights = {});
     void print_nodes() const;
     void delete_node(T2 node_id);
-    void bfs(T2 node_id, std::function<void()> action);
+    void bfs(T2 node_id, std::function<void(EdgeTraversal<T2>& )> action);
     void dfs(T2 node_id, std::function<void()> action);
     void add_edge(const T2& source, const T2& dest, int weight = 0);
     void print_nodes_as_dot() const;
     
 private:
     void reset_visited_state();
+    void bfs_(T2& node_id, std::function<void(EdgeTraversal<T2>& )> action, EdgeTraversal<T2>& et);
     void dfs_(const std::unique_ptr<GraphNode<T2> >& node, std::function<void()> action);
     
     std::map<T2, std::unique_ptr<GraphNode<T2> > > nodes;
@@ -132,23 +144,34 @@ void Graph<T>::reset_visited_state()
 }
 
 template<typename T>
-void Graph<T>::bfs(T node_id, std::function<void()> action)
+void Graph<T>::bfs(T node_id, std::function<void(EdgeTraversal<T>& )> action)
+{
+    EdgeTraversal<T> et;
+    et.has_parent = false;
+    bfs_(node_id, action, et);
+}
+template<typename T>
+void Graph<T>::bfs_(T& node_id, std::function<void(EdgeTraversal<T>& )> action, EdgeTraversal<T>& et)
 {
     reset_visited_state();
 
-    std::queue<T> bfs_q;    
+    std::queue<T> bfs_q;
     bfs_q.push(node_id);
     while(!bfs_q.empty()) {
         auto id = bfs_q.front();
         auto it = nodes.find(id);
-       
-       if(it == nodes.end())
-          return;
 
+        if(it == nodes.end())
+            return;
+        
+        et.parent_ = id;
+        et.has_parent = true;
         if (it != nodes.end() && !it->second->visited) {
-            std::cout << it->second->label_ << '\n';
             it->second->visited = true;
             for(const auto item : it->second->neighbors_) {
+                et.current_ = item.label_;
+                et.weight = item.weight_;
+                action(et);
                 bfs_q.push(item.label_);
             }
         }
@@ -186,8 +209,11 @@ template<typename T>
 void Graph<T>::add_edge(const T& source, const T& dest, int weight)
 {
     auto it = nodes.find(source);
-    if(it != nodes.end()) {
-        it->second->neighbors_.push_back({dest, weight});
+    if(it == nodes.end()) {
+        insert_node(source, {}, {});
+        it = nodes.find(source);
     }
+    it->second->neighbors_.push_back({dest, weight});
 }
+#endif
 
