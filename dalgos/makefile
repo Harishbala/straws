@@ -3,7 +3,8 @@ CXX=g++
 CXXFLAGS=--std=c++17
 OPT_FLAG= -o
 
-all: tree linked_list 
+COMPONENTS = tree linked_list strings
+all: $(COMPONENTS) 
 
 tree: tree.o
 	$(CXX) $< $(OPT_FLAG) $@
@@ -11,8 +12,10 @@ tree: tree.o
 linked_list: linked_list.o
 	$(CC) $< $(OPT_FLAG) $@
 
+strings: strings.o
+	$(CXX) $< $(OPT_FLAG) $@
+
 clean:
 	rm *.o
-	rm tree
-	rm linked_list
+	rm $(COMPONENTS)
 
