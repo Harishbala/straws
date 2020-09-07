@@ -32,10 +32,13 @@ class BinaryTree
     BinaryTree() : root(nullptr) {}
     void insert(int value);
     void print();
+    void balance();
     private:
     s_ptr<Node> root;
     void insert(int value, s_ptr<Node>& current);
     void print_(const s_ptr<Node>& node, int level, vector<vector<int>>& values);
+    void get_sorted(s_ptr<Node>& node, vector<int>& sorted);
+    void balance_(s_ptr<Node>& node, vector<int>& sorted, int start, int end);
 };
 
 void BinaryTree::insert(int value)
@@ -93,6 +96,34 @@ void BinaryTree::print_(const s_ptr<Node>& node, int level, vector<vector<int>>&
         print_(node->right, level+1, values);
     }
 }
+
+void BinaryTree::balance() {
+    vector<int> sorted;
+    get_sorted(root, sorted);
+
+    balance_(root, sorted, 0, sorted.size()-1);
+}
+
+void BinaryTree::get_sorted(s_ptr<Node>& node, vector<int>& sorted) {
+    if(node) {
+        get_sorted(node->left, sorted);
+        sorted.push_back(node->val);
+        get_sorted(node->right, sorted);
+    }
+}
+
+void BinaryTree::balance_(s_ptr<Node>& node, vector<int>& sorted, int start, int end) {
+    
+    if(start > end)
+        return;
+
+    int mid = (start + end) / 2;
+    
+    node = std::make_shared<Node>(sorted[mid]); 
+    balance_(node->left, sorted, start, mid-1);
+    balance_(node->right, sorted, mid+1, end);
+    
+}
 class Tree
 {
     s_ptr<Node_E> find_center_of_tree();
@@ -124,6 +155,9 @@ int main()
    t.insert(1);
    t.insert(2);
    t.insert(3);
+   t.print();
+   t.balance();
+   std::cout << "After balancing:\n";
    t.print();
    return 0;
 }
