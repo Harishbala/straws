@@ -1,9 +1,9 @@
 CC=gcc
 CXX=g++
-CXXFLAGS=--std=c++11
+CXXFLAGS=--std=c++17
 OPT_FLAG= -o
 
-all: tree linked_list
+all: tree linked_list 
 
 tree: tree.o
 	$(CXX) $< $(OPT_FLAG) $@
