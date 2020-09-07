@@ -31,16 +31,18 @@ class BinaryTree
     public:
     BinaryTree() : root(nullptr) {}
     void insert(int value);
+    void print();
     private:
     s_ptr<Node> root;
-    void insert(int value, s_ptr<Node> current);
+    void insert(int value, s_ptr<Node>& current);
+    void print_(const s_ptr<Node>& node, int level, vector<vector<int>>& values);
 };
 
 void BinaryTree::insert(int value)
 {
     return insert(value, root);
 }
-void BinaryTree::insert(int value, s_ptr<Node> current)
+void BinaryTree::insert(int value, s_ptr<Node>& current)
 {
     if(current)
     {
@@ -66,6 +68,31 @@ void BinaryTree::insert(int value, s_ptr<Node> current)
     }
 }
 
+void BinaryTree::print() {
+    vector<vector<int>> values;
+    print_(root, 0, values);
+
+    for(const auto& item : values) {
+        for(const auto& v : item) {
+            std::cout << v << ' ';
+        }
+        std::cout <<'\n';
+    }
+}
+
+void BinaryTree::print_(const s_ptr<Node>& node, int level, vector<vector<int>>& values)
+{
+    if(node)
+    {
+        if(level+1 > values.size()) {
+            values.push_back({});
+        }
+        values[level].push_back(node->val);
+
+        print_(node->left, level+1, values);
+        print_(node->right, level+1, values);
+    }
+}
 class Tree
 {
     s_ptr<Node_E> find_center_of_tree();
@@ -97,5 +124,6 @@ int main()
    t.insert(1);
    t.insert(2);
    t.insert(3);
+   t.print();
    return 0;
 }
