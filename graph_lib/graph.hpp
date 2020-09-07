@@ -225,15 +225,6 @@ void Graph<T>::add_edge(const T& source, const T& dest, int weight)
 template<typename T>
 void Graph<T>::dijikstra_shortest_paths(T source)
 {
-    //Create a distance hash_map, where you can store distance.
-    //Set the source dist to 0 and all others to infinite.
-    //Insert the source and it's distance to min heap which controlled by distance, need to add comp function.
-        //While the heap is not empty, iterate
-            //For each item in min heap, caluclate it's neighbors' distance by source distance + weight
-            //if the distance is new, i.e. if the old distance is infinite then just push into heap.
-            //update if new short distance found for vertex in min heap, probably need to find by key with a special compare function.
-            //reform heap
-    //return the final distance hash_map
     auto it = nodes.find(source);
     if(it == nodes.end()) return;
 
