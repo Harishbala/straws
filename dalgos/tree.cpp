@@ -2,6 +2,7 @@
 #include <memory>
 #include <vector>
 #include <map>
+#include <queue>
 
 using namespace std;
 
@@ -33,12 +34,15 @@ class BinaryTree
     void insert(int value);
     void print();
     void balance();
+    int find_tree_height();
+
     private:
     s_ptr<Node> root;
     void insert(int value, s_ptr<Node>& current);
     void print_(const s_ptr<Node>& node, int level, vector<vector<int>>& values);
     void get_sorted(s_ptr<Node>& node, vector<int>& sorted);
     void balance_(s_ptr<Node>& node, vector<int>& sorted, int start, int end);
+    int find_tree_height_(s_ptr<Node>& node); 
 };
 
 void BinaryTree::insert(int value)
@@ -148,6 +152,23 @@ s_ptr<Node_E> Tree::find_center_of_tree_(s_ptr<Node_E> current)
     }
     return nullptr;
 }
+
+int BinaryTree::find_tree_height() {
+    return find_tree_height_(root);
+}
+
+int BinaryTree::find_tree_height_(s_ptr<Node>& node) {
+    std::queue<s_ptr<Node>> bfs_q;
+    bfs_q.push(root);
+
+    while (!bfs_q.empty()) {
+        s_ptr<Node>& current = bfs_q.front();
+
+        bfs_q.pop();
+    }
+    return 0;
+}
+
 int main()
 {
    BinaryTree t;
