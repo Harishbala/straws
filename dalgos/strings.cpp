@@ -73,6 +73,19 @@ int search_rotated(std::string str, char target) {
     return index;
 }
 
+void filter_duplicated_from_sorted(std::string& str)
+{
+    auto current_unique = str.begin();
+    for(auto it = str.begin() + 1; it != str.end(); ++it)
+    {
+        if(*current_unique != *it) {
+
+            it = str.erase(current_unique + 1, it);
+            current_unique = it;
+        }
+    }
+        
+}
 int main()
 {
     std::string str{"Helloworld"};
@@ -86,4 +99,7 @@ int main()
     
     std::cout << str << '\n';
     std::cout <<search_rotated(str, 'o') <<'\n';
+
+    filter_duplicated_from_sorted(str);
+    std::cout << str << '\n';
 }
