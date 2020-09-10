@@ -86,20 +86,3 @@ void filter_duplicated_from_sorted(std::string& str)
     }
         
 }
-int main()
-{
-    std::string str{"Helloworld"};
-
-    sort(begin(str), end(str));
-    
-    std::cout <<str<<'\n';
-    std::cout <<binary_search(str, 'o') <<'\n';
-
-    std::rotate(begin(str), begin(str) + 3, end(str));
-    
-    std::cout << str << '\n';
-    std::cout <<search_rotated(str, 'o') <<'\n';
-
-    filter_duplicated_from_sorted(str);
-    std::cout << str << '\n';
-}

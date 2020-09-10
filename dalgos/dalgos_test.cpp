@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 #include "tree.hpp"
+#include "strings.hpp"
 
 TEST(BinaryTreeTest, TreeHeight_Balanced) {
    BinaryTree t;
@@ -85,6 +86,25 @@ TEST(BinaryTreeTest, TreeHeight_with_no_nodes) {
    std::cout << "Tree height : " << height << '\n';
    ASSERT_EQ(0, height);
 }
+
+TEST(StringsTest, String_Binary_Search)
+{
+    std::string str{"Helloworld"};
+
+    sort(begin(str), end(str));
+    
+    std::cout <<str<<'\n';
+    std::cout <<binary_search(str, 'o') <<'\n';
+
+    std::rotate(begin(str), begin(str) + 3, end(str));
+    
+    std::cout << str << '\n';
+    std::cout <<search_rotated(str, 'o') <<'\n';
+
+    filter_duplicated_from_sorted(str);
+    std::cout << str << '\n';
+}
+
 int main(int argc, char** argv) {
     testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
