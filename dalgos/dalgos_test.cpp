@@ -109,7 +109,10 @@ TEST(StringsTest, String_Binary_Search)
 TEST(AlgorithmTest, max_contiguous_sum)
 {
     std::vector<int> nums = {1,2,3,0,-1,1,2,3,4,5};
-    ASSERT_EQ(max_contiguous_sum(nums), 15);
+    ASSERT_EQ(max_contiguous_sum(nums), 21);
+    
+    std::vector<int> nums_two = {1,2,3,0,-855,1,2,3,4,5};
+    ASSERT_EQ(max_contiguous_sum(nums_two), 1);
 }
 
 int main(int argc, char** argv) {
