@@ -159,6 +159,7 @@ void BinaryTree::bfs()
         bfs_q.pop();
     }
 }
+
 class Tree
 {
     s_ptr<Node_E> find_center_of_tree();

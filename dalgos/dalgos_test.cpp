@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 #include "tree.hpp"
 #include "strings.hpp"
+#include "arrays.hpp"
 
 TEST(BinaryTreeTest, TreeHeight_Balanced) {
    BinaryTree t;
@@ -103,6 +104,12 @@ TEST(StringsTest, String_Binary_Search)
 
     filter_duplicated_from_sorted(str);
     std::cout << str << '\n';
+}
+
+TEST(AlgorithmTest, max_contiguous_sum)
+{
+    std::vector<int> nums = {1,2,3,0,-1,1,2,3,4,5};
+    ASSERT_EQ(max_contiguous_sum(nums), 15);
 }
 
 int main(int argc, char** argv) {

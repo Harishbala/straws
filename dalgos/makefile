@@ -10,7 +10,7 @@ all: $(COMPONENTS)
 dalgos_test: dalgos_test.o tree.hpp
 	$(CXX) $< $(OPT_FLAG) $@ $(LDFLAGS) -l gtest
 
-dalgos_test.o: dalgos_test.cpp tree.hpp strings.hpp
+dalgos_test.o: dalgos_test.cpp tree.hpp strings.hpp arrays.hpp
 	$(CXX) -c $(CXXFLAGS) $<
 
 clean:
