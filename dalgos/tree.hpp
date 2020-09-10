@@ -168,7 +168,7 @@ void BinaryTree::find_tree_height_(s_ptr<Node>& node,int level, int& height) {
     }
 }
 
-int main()
+int main_disabled()
 {
    BinaryTree t;
    std::cout<<"Inserting elements\n";
