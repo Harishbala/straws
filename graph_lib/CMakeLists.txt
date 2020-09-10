@@ -7,6 +7,9 @@ set(INC graph.hpp graph_as_dot.hpp)
 
 add_executable(graph_test ${SRC} ${INC})
 include_directories(graph_test PRIVATE /usr/local/include)
+target_link_libraries(graph_test -L/usr/local/lib)
+
+target_link_libraries(graph_test libgtest.a)
 
 add_executable(graph_jazzon graph_jazzon.cpp)
 target_compile_features(graph_test PUBLIC cxx_std_17)
