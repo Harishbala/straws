@@ -35,6 +35,7 @@ class BinaryTree
     void print();
     void balance();
     int find_tree_height();
+    void bfs();
 
     private:
     s_ptr<Node> root;
@@ -49,6 +50,7 @@ void BinaryTree::insert(int value)
 {
     return insert(value, root);
 }
+
 void BinaryTree::insert(int value, s_ptr<Node>& current)
 {
     if(current)
@@ -128,6 +130,35 @@ void BinaryTree::balance_(s_ptr<Node>& node, vector<int>& sorted, int start, int
     balance_(node->right, sorted, mid+1, end);
     
 }
+
+int BinaryTree::find_tree_height() {
+    int level = 0;
+    int height = 0;
+    find_tree_height_(root, 1, height);
+    return height;
+}
+
+void BinaryTree::find_tree_height_(s_ptr<Node>& node,int level, int& height) {
+    if (node) {
+        height = max(height, level);
+        find_tree_height_(node->left, level+1, height);
+        find_tree_height_(node->right, level+1, height);
+    }
+}
+
+void BinaryTree::bfs()
+{
+    std::queue<s_ptr<Node>> bfs_q;
+    bfs_q.push(root);
+
+    while(!bfs_q.empty()) {
+        auto item = bfs_q.front();
+        std::cout << item->val << '\n';
+        if (item->left) bfs_q.push(item->left);
+        if (item->right) bfs_q.push(item->right);
+        bfs_q.pop();
+    }
+}
 class Tree
 {
     s_ptr<Node_E> find_center_of_tree();
@@ -152,20 +183,4 @@ s_ptr<Node_E> Tree::find_center_of_tree_(s_ptr<Node_E> current)
     }
     return nullptr;
 }
-
-int BinaryTree::find_tree_height() {
-    int level = 0;
-    int height = 0;
-    find_tree_height_(root, 1, height);
-    return height;
-}
-
-void BinaryTree::find_tree_height_(s_ptr<Node>& node,int level, int& height) {
-    if (node) {
-        height = max(height, level);
-        find_tree_height_(node->left, level+1, height);
-        find_tree_height_(node->right, level+1, height);
-    }
-}
-
 

@@ -1,21 +1,17 @@
 CC=gcc
 CXX=g++
 CXXFLAGS=--std=c++17
-INC=-I/usr/local/include/gtes
 LDFLAGS=-L /usr/local/lib/
 OPT_FLAG= -o
 
-COMPONENTS = linked_list strings dalgos_test
+COMPONENTS = linked_list strings dalgos_test 
 all: $(COMPONENTS) 
 
-linked_list: linked_list.o
-	$(CC) $< $(OPT_FLAG) $@
-
-strings: strings.o
-	$(CXX) $< $(OPT_FLAG) $@
-
-dalgos_test: dalgos_test.o 
+dalgos_test: dalgos_test.o tree.hpp
 	$(CXX) $< $(OPT_FLAG) $@ $(LDFLAGS) -l gtest
+
+dalgos_test.o: dalgos_test.cpp tree.hpp
+	$(CXX) -c $(CXXFLAGS) $<
 
 clean:
 	rm *.o
