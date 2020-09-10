@@ -2,6 +2,7 @@
 #include "tree.hpp"
 #include "strings.hpp"
 #include "arrays.hpp"
+#include "graph.hpp"
 
 TEST(BinaryTreeTest, TreeHeight_Balanced) {
    BinaryTree t;
