@@ -116,6 +116,18 @@ TEST(AlgorithmTest, max_contiguous_sum)
     ASSERT_EQ(max_contiguous_sum(nums_two), 1);
 }
 
+TEST(GraphTest, Graph_Insert_Test)
+{
+    std::vector<int> neighbors_one = {1, 2};
+    std::vector<int> neighbors_two = {0};
+    std::vector<int> neighbors_three = {1};
+
+    Graph g;
+    g.insert(neighbors_one);
+    g.insert(neighbors_two);
+    g.insert(neighbors_three);
+
+}
 int main(int argc, char** argv) {
     testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
