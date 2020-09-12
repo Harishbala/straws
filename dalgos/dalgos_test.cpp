@@ -18,9 +18,9 @@ TEST(BinaryTreeTest, TreeHeight_Balanced) {
    std::cout << "Tree height : " << height << '\n';
    ASSERT_EQ(2, height);
 }
+
 TEST(BinaryTreeTest, TreeHeight_Balanced_Bigtree) {
    BinaryTree t;
-
    //input tree taken from : http://faculty.washington.edu/jstraub/dsa/btree/test_balance.html
    t.insert(1024);
    t.insert(512);
@@ -126,6 +126,12 @@ TEST(GraphTest, Graph_Insert_Test)
     g.insert(neighbors_one);
     g.insert(neighbors_two);
     g.insert(neighbors_three);
+
+}
+
+TEST(StringTest, String_Palindrome_check)
+{
+    ASSERT_EQ(drop_chars_to_palindrome("abac"), 1);
 
 }
 int main(int argc, char** argv) {

@@ -73,6 +73,18 @@ int search_rotated(std::string str, char target) {
     return index;
 }
 
+int drop_chars_to_palindrome(const std::string& str)
+{
+    vector<vector<int>> dyn_table;
+
+    for(int i = 1; i <= str.length(); ++i) {
+        for(int j = 0; j < str.length() - i; ++j) {
+            
+        }
+    }
+}
+
+
 void filter_duplicated_from_sorted(std::string& str)
 {
     auto current_unique = str.begin();
@@ -84,5 +96,5 @@ void filter_duplicated_from_sorted(std::string& str)
             current_unique = it;
         }
     }
-        
 }
+
