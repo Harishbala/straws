@@ -77,11 +77,43 @@ int drop_chars_to_palindrome(const std::string& str)
 {
     vector<vector<int>> dyn_table;
 
-    for(int i = 1; i <= str.length(); ++i) {
-        for(int j = 0; j < str.length() - i; ++j) {
-            
+    dyn_table.resize(str.length());
+    for(int i = 0; i < str.length(); ++i) {
+        dyn_table[i].resize(str.length());
+    }
+
+    for(int i = 1; i < 2; ++i) {
+       for(int j = 0; j < str.length() - (i + 1); ++j) {
+            if(str[j] == str[j + i])
+            {
+                dyn_table[i][j] = 0; 
+            }
+            else {
+               dyn_table[i][j] = 1;
+               dyn_table[i][j+1] = 1; 
+            }
         }
     }
+    for(int i = 0; i < str.length(); ++i) {
+        for (int j = 0; j< str.length(); ++j) {
+            std::cout<< dyn_table[i][j] <<' ';
+        }
+        std::cout << '\n';
+    }
+
+    for(int i = 1; i <= str.length(); ++i) {
+        for(int j = 0; j < str.length() - i; ++j) {
+            if(str[j] == str[j + i])
+            {
+                dyn_table[i][j] = dyn_table[i-1][j+1];
+            }
+            else {
+                int left_max = dyn_table[i-1][j];
+                int right_max = dyn_table[i-1][j+1];
+            }
+        }
+    }
+    return 0;
 }
 
 
@@ -91,7 +123,6 @@ void filter_duplicated_from_sorted(std::string& str)
     for(auto it = str.begin() + 1; it != str.end(); ++it)
     {
         if(*current_unique != *it) {
-
             it = str.erase(current_unique + 1, it);
             current_unique = it;
         }
