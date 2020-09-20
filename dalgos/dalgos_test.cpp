@@ -96,7 +96,9 @@ TEST(StringsTest, String_Binary_Search)
     sort(begin(str), end(str));
     
     std::cout <<str<<'\n';
-    std::cout <<binary_search(str, 'o') <<'\n';
+    ASSERT_EQ(1, binary_search(str, 'd'));
+    ASSERT_EQ(0, binary_search(str, 'H'));
+    ASSERT_EQ(9, binary_search(str, 'w'));
 
     std::rotate(begin(str), begin(str) + 3, end(str));
     
