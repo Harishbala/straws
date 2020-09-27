@@ -89,7 +89,7 @@ TEST(BinaryTreeTest, TreeHeight_with_no_nodes) {
    ASSERT_EQ(0, height);
 }
 
-TEST(StringsTest, String_Binary_Search)
+TEST(StringTest, String_Binary_Search)
 {
     std::string str{"Helloworld"};
 

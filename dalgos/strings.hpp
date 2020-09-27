@@ -103,13 +103,13 @@ int drop_chars_to_palindrome(const std::string& str)
 
     for(int i = 1; i <= str.length(); ++i) {
         for(int j = 0; j < str.length() - i; ++j) {
-            if(str[j] == str[j + i])
-            {
+            if(str[j] == str[j + i]) {
                 dyn_table[i][j] = dyn_table[i-1][j+1];
             }
             else {
                 int left_max = dyn_table[i-1][j];
                 int right_max = dyn_table[i-1][j+1];
+                dyn_table[i][j] = std::max(left_max, right_max);
             }
         }
     }
