@@ -18,9 +18,9 @@ int main() {
 
     std::cout << "Task returned:" << future_var.get() << std::endl;
 
-    std::cout << "Task2 returned:" << fut2.get() << std::endl;
-
     while (fut2.wait_for(100ms) !=  std::future_status::ready)
     {
     }
+
+    std::cout << "Task2 returned:" << fut2.get() << std::endl;
 }
