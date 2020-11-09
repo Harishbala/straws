@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <sys/types.h>
+#include <sys/wait.h>
 #include <unistd.h>
 #include <errno.h>
 
@@ -11,7 +12,10 @@ int main()
         printf("Child process\n");
     }
     else if (rc > 0) {
-        printf("Parent successfully forked, child process id: %d\n", rc);
+	int wstatus = 0;
+	int c_pid = wait(&wstatus);
+	printf("Parent successfully forked, child process id: %d\n", rc);
+
     }
     else {
         printf("Fork failed, errno: %d\n", errno);
