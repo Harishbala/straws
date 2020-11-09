@@ -10,6 +10,7 @@
 static volatile int counter = 0;
 
 pthread_mutex_t lock;
+pthread_cond_t condition;
 
 void* thread_to_run(void *arg)
 {
@@ -39,8 +40,16 @@ int main()
 	pthread_create(&p1, nullptr, thread_to_run, &t1_arg);
 	pthread_create(&p2, nullptr, thread_to_run, &t2_arg);
 
-	pthread_join(p1, nullptr);
-	pthread_join(p2, nullptr);
+	//pthread_join(p1, nullptr);
+	//pthread_join(p2, nullptr);
+	int loop_ctrl = 1e7;
+	std::cout << "Loop control: " << loop_ctrl << '\n';
+
+	pthread_mutex_lock(&lock);
+	while ( counter > 2 * loop_ctrl) {
+		pthread_cond_wait(&condition, &lock);
+	}
+	pthread_mutex_unlock(&lock);
 
 	pthread_mutex_destroy(&lock);
 	std::cout<<"counter ="<<counter<<"\n";
