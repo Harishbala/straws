@@ -10,6 +10,7 @@ int main()
 
     if (rc == 0) {
         printf("Child process\n");
+	execl("ls", NULL);
     }
     else if (rc > 0) {
 	int wstatus = 0;
