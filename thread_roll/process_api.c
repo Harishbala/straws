@@ -10,6 +10,8 @@ int main()
 
     if (rc == 0) {
         printf("Child process\n");
+	int exec_ret = execl("/bin/ls", NULL);
+	printf("Exec ret: %d errno: %d\n", exec_ret, errno);
     }
     else if (rc > 0) {
 	int wstatus = 0;
