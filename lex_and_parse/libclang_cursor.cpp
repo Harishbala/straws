@@ -3,9 +3,13 @@
 //To compile: clang++ libclang_cursor.cpp -o lcc -I/usr/local/Cellar/llvm/11.1.0/include/ --std=c++11 -L/usr/local/Cellar/llvm/11.1.0/lib -lclang
 
 #include <iostream>
+#include <map>
+#include <sstream>
 #include <clang-c/Index.h>
 #include "directory.hpp"
 using namespace std;
+
+std::map<std::string, std::vector<std::string>> class_details;
 
 ostream& operator<<(ostream& stream, const CXString& str)
 {
@@ -25,9 +29,9 @@ struct Code_stats
 void analyze_code(const CXCursor& c)
 {
     if (clang_getCursorKind(c) == CXCursor_ClassDecl) {
-        cout << "Cursor '" << clang_getCursorSpelling(c) << "' of kind '"
-        << clang_getCursorKindSpelling(clang_getCursorKind(c))
-        << " ------- ";
+        std::stringstream class_name;
+        class_name << clang_getCursorSpelling(c);
+        class_details[class_name.str()] = {};
         auto extent = clang_getCursorExtent(c);
 
         CXSourceLocation startLocation = clang_getRangeStart( extent );
@@ -44,10 +48,27 @@ void analyze_code(const CXCursor& c)
 
         std::cout << " " << file_full_path <<"  line number start: " << startLine << ", end: " << endLine << " Total: "
         << endLine - startLine << "\n";
-
-
     } 
+    else {
+       auto parent_cursor = clang_getCursorSemanticParent(c);
+        if (clang_getCursorKind(parent_cursor) == CXCursor_ClassDecl) {
+            auto acc_spec = clang_getCXXAccessSpecifier(c);
+            std::stringstream member_description{""};
+            if (acc_spec == CX_CXXPublic) {
+                member_description << "+ ";
+            }
+            else {
+                member_description << "- ";
+            }
+            member_description << clang_getCursorSpelling(c); 
+
+            std::stringstream parent_name;
+            parent_name << clang_getCursorSpelling(parent_cursor);
+            class_details[parent_name.str()].push_back(member_description.str());
+        }
+    }
 }
+
 int main(int argc, char** argv)
 {
     CXIndex index = clang_createIndex(0, 0);
@@ -58,7 +79,6 @@ int main(int argc, char** argv)
     dir.get_file_entries(file_entries);
     for(const auto& entry : file_entries) {
         std::string file_path = code_path + "/" + entry;
-        std::cout << file_path << '\n';
 
         if (entry.find(".cpp") != string::npos) {
             CXTranslationUnit unit = clang_parseTranslationUnit(
@@ -86,4 +106,11 @@ int main(int argc, char** argv)
         }
     }
     clang_disposeIndex(index);
+
+    for (const auto& class_item : class_details) {
+        std::cout << class_item.first << '\n';
+        for (const auto& member_item : class_item.second) {
+            std::cout << member_item << '\n';
+        }
+    }
 }
