@@ -26,6 +26,21 @@ struct Code_stats
     int class_count;
 };
 
+string cursor_kind_to_string (const CXCursorKind& cursor_kind)
+{
+    std::string str_cursor_kind{""};
+
+    switch (cursor_kind) {
+        case CXCursor_FunctionDecl:
+            str_cursor_kind = "CXCursor_FunctionDecl";
+            break;
+        default:
+            str_cursor_kind = "unknown_cursor_kind";
+            break;
+    }
+    return str_cursor_kind;
+}
+
 void analyze_code(const CXCursor& c)
 {
     if (clang_getCursorKind(c) == CXCursor_ClassDecl) {
@@ -50,7 +65,9 @@ void analyze_code(const CXCursor& c)
         << endLine - startLine << "\n";
     } 
     else {
-       auto parent_cursor = clang_getCursorSemanticParent(c);
+        std::cout << clang_getCursorSpelling(c) << " - "
+            << cursor_kind_to_string ( clang_getCursorKind(c) ) << '\n';
+        auto parent_cursor = clang_getCursorSemanticParent(c);
         if (clang_getCursorKind(parent_cursor) == CXCursor_ClassDecl) {
             auto acc_spec = clang_getCXXAccessSpecifier(c);
             std::stringstream member_description{""};
@@ -72,7 +89,14 @@ void analyze_code(const CXCursor& c)
 int main(int argc, char** argv)
 {
     CXIndex index = clang_createIndex(0, 0);
-    std::string code_path = "/Users/harish/Projects/straws/straws/dalgos";
+    std::string code_path{};
+    if (argc > 1) {
+        code_path = std::string{argv[1]};
+    }
+    else {
+        std::cout << "Missing code path\n";
+        return 1;
+    } 
     Directory dir(code_path);
 
     std::vector<std::string> file_entries;
