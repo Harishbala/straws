@@ -6,40 +6,16 @@
 #include <map>
 #include <sstream>
 #include <clang-c/Index.h>
+#include "clang_helpers.h"
 #include "directory.hpp"
 using namespace std;
 
 std::map<std::string, std::vector<std::string>> class_details;
 
-ostream& operator<<(ostream& stream, const CXString& str)
-{
-    auto c_ptr = clang_getCString(str);
-    if (c_ptr != nullptr) {
-        stream << c_ptr;
-    }
-    clang_disposeString(str);
-    return stream;
-}
-
 struct Code_stats
 {
     int class_count;
 };
-
-string cursor_kind_to_string (const CXCursorKind& cursor_kind)
-{
-    std::string str_cursor_kind{""};
-
-    switch (cursor_kind) {
-        case CXCursor_FunctionDecl:
-            str_cursor_kind = "CXCursor_FunctionDecl";
-            break;
-        default:
-            str_cursor_kind = "unknown_cursor_kind";
-            break;
-    }
-    return str_cursor_kind;
-}
 
 void analyze_code(const CXCursor& c)
 {
@@ -66,7 +42,7 @@ void analyze_code(const CXCursor& c)
     } 
     else {
         std::cout << clang_getCursorSpelling(c) << " - "
-            << cursor_kind_to_string ( clang_getCursorKind(c) ) << '\n';
+           << cursor_kind_to_string ( clang_getCursorKind(c) ) << '\n';
         auto parent_cursor = clang_getCursorSemanticParent(c);
         if (clang_getCursorKind(parent_cursor) == CXCursor_ClassDecl) {
             auto acc_spec = clang_getCXXAccessSpecifier(c);
@@ -104,7 +80,10 @@ int main(int argc, char** argv)
     for(const auto& entry : file_entries) {
         std::string file_path = code_path + "/" + entry;
 
-        if (entry.find(".cpp") != string::npos) {
+        if (entry.find(".cpp") != string::npos ||
+                entry.find(".hpp") != string::npos ||
+                entry.find(".h") != string::npos ||
+                entry.find(".c") != string::npos) {
             CXTranslationUnit unit = clang_parseTranslationUnit(
                 index,
                 file_path.c_str(), nullptr, 0,
