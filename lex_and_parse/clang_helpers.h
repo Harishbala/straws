@@ -302,3 +302,25 @@ void generate_cursor_kind_strings(const CXCursor& c)
             << '"' << clang_getCursorSpelling(c) << '"' << "},\n";
     }
 }
+
+void print_location(const CXCursor& c)
+{
+    auto extent = clang_getCursorExtent(c);
+
+    CXSourceLocation startLocation = clang_getRangeStart( extent );
+    CXSourceLocation endLocation   = clang_getRangeEnd( extent );
+
+    unsigned int startLine = 0, startColumn = 0;
+    unsigned int endLine   = 0, endColumn   = 0;
+
+    CXFile file;
+    clang_getSpellingLocation( startLocation, &file, &startLine, &startColumn, nullptr );
+    clang_getSpellingLocation( endLocation,   nullptr, &endLine, &endColumn, nullptr );
+
+    auto file_full_path = clang_getFileName(file);	
+
+    std::cout << " " << file_full_path <<"  line number start: "
+        << startLine << " - " << startColumn << ", end: " 
+        << endLine << " - " << endColumn << " Total: "
+        << endLine - startLine << "\n";
+}

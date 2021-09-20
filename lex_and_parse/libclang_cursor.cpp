@@ -17,32 +17,19 @@ struct Code_stats
     int class_count;
 };
 
-void analyze_code(const CXCursor& c)
+void analyze_code(const CXCursor& c, CXClientData client_data)
 {
     if (clang_getCursorKind(c) == CXCursor_ClassDecl) {
         std::stringstream class_name;
         class_name << clang_getCursorSpelling(c);
         class_details[class_name.str()] = {};
-        auto extent = clang_getCursorExtent(c);
-
-        CXSourceLocation startLocation = clang_getRangeStart( extent );
-        CXSourceLocation endLocation   = clang_getRangeEnd( extent );
-
-        unsigned int startLine = 0, startColumn = 0;
-        unsigned int endLine   = 0, endColumn   = 0;
-
-        CXFile file;
-        clang_getSpellingLocation( startLocation, &file, &startLine, &startColumn, nullptr );
-        clang_getSpellingLocation( endLocation,   nullptr, &endLine, &endColumn, nullptr );
-
-        auto file_full_path = clang_getFileName(file);	
-
-        std::cout << " " << file_full_path <<"  line number start: " << startLine << ", end: " << endLine << " Total: "
-        << endLine - startLine << "\n";
+        print_location(c);
     } 
     else {
         std::cout << clang_getCursorSpelling(c) << " - "
            << cursor_kind_to_string ( clang_getCursorKind(c) ) << '\n';
+        print_location(c);
+
         auto parent_cursor = clang_getCursorSemanticParent(c);
         if (clang_getCursorKind(parent_cursor) == CXCursor_ClassDecl) {
             auto acc_spec = clang_getCXXAccessSpecifier(c);
@@ -58,6 +45,26 @@ void analyze_code(const CXCursor& c)
             std::stringstream parent_name;
             parent_name << clang_getCursorSpelling(parent_cursor);
             class_details[parent_name.str()].push_back(member_description.str());
+        }
+        if(clang_getCursorKind(c) == CXCursor_CompoundStmt) {
+            auto extent = clang_getCursorExtent(c);
+
+            CXSourceLocation startLocation = clang_getRangeStart( extent );
+            CXSourceLocation endLocation   = clang_getRangeEnd( extent );
+
+            CXTranslationUnit* pUnit = static_cast<CXTranslationUnit*>(client_data);
+            CXSourceRange src_range = clang_getRange(startLocation, endLocation);
+
+            CXToken* ppTokens = nullptr;
+            unsigned int numToken = 0;
+
+            clang_tokenize(*pUnit, src_range, &ppTokens, &numToken);
+            std::cout << "Number of tokens :" << numToken << '\n';
+            for (int i = 0; i < numToken; ++i) {
+                CXToken* pToken = ppTokens + i;
+                std::cout << "------------------- Token ------------------";
+                std::cout << clang_getTokenSpelling(*pUnit, *pToken) << '\n';
+            }
         }
     }
 }
@@ -100,10 +107,10 @@ int main(int argc, char** argv)
                 cursor,
                 [](CXCursor c, CXCursor parent, CXClientData client_data)
                 {
-                  analyze_code(c);
+                  analyze_code(c, client_data);
                   return CXChildVisit_Recurse;
                 },
-                nullptr);
+                static_cast<CXClientData>(&unit));
 
                 clang_disposeTranslationUnit(unit);
         }
