@@ -2,6 +2,7 @@
 #include <dirent.h>
 #include <string>
 #include <vector>
+#include <string.h>
 
 class Directory
 {
@@ -28,6 +29,9 @@ Directory::Directory(const std::string& path)
 void Directory::open()
 {
     _dir = opendir(_path.c_str());
+    if (!_dir) {
+        std::cout << "Failed to open the directory: " << strerror(errno) << "\n";
+    }
 }
 
 void Directory::close()
@@ -55,6 +59,9 @@ bool Directory::get_directory_entries(std::vector<std::string>& entries)
 
 bool Directory::get_file_entries(std::vector<std::string>& entries)
 {
+    if (!_dir)
+        return false;
+
     dirent* dir_ent;
     while ((dir_ent = readdir(_dir)) != NULL)
     {

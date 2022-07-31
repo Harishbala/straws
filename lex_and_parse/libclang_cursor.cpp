@@ -86,6 +86,7 @@ int main(int argc, char** argv)
     dir.get_file_entries(file_entries);
     for(const auto& entry : file_entries) {
         std::string file_path = code_path + "/" + entry;
+	std::cout << "Processing file: " << entry << "\n";
 
         if (entry.find(".cpp") != string::npos ||
                 entry.find(".hpp") != string::npos ||
