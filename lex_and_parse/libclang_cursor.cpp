@@ -5,6 +5,7 @@
 #include <iostream>
 #include <map>
 #include <sstream>
+#include <cstdlib>
 #include <clang-c/Index.h>
 #include "clang_helpers.h"
 #include "directory.hpp"
@@ -80,10 +81,18 @@ int main(int argc, char** argv)
         std::cout << "Missing code path\n";
         return 1;
     } 
-    Directory dir(code_path);
 
     std::vector<std::string> file_entries;
-    dir.get_file_entries(file_entries);
+    try {
+	Directory dir(code_path);
+	dir.get_file_entries(file_entries);
+    }
+    catch (const std::exception& ex) {
+	std::cout << "Aborting program\n";
+	std::cout << ex.what() << "\n";
+	std::exit(EXIT_FAILURE);
+    }
+
     for(const auto& entry : file_entries) {
         std::string file_path = code_path + "/" + entry;
 	std::cout << "Processing file: " << entry << "\n";

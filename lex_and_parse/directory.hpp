@@ -23,14 +23,22 @@ class Directory
 Directory::Directory(const std::string& path)
 {
     _path = path;
-    open();
+    try {
+        open();
+    }
+    catch (const std::exception& ex) {
+        std::cout << ex.what() << "\n";
+	throw;
+    }
 }
 
 void Directory::open()
 {
     _dir = opendir(_path.c_str());
     if (!_dir) {
-        std::cout << "Failed to open the directory: " << strerror(errno) << "\n";
+	std::stringstream ss;
+	ss << "opendir() failed: " << strerror(errno) << "(" << errno << ")";
+	throw ss.str();
     }
 }
 
