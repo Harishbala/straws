@@ -28,7 +28,7 @@ Directory::Directory(const std::string& path)
     }
     catch (const std::exception& ex) {
         std::cout << ex.what() << "\n";
-	throw;
+        throw;
     }
 }
 
